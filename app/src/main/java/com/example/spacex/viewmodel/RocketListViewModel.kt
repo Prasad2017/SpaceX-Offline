@@ -1,16 +1,17 @@
 package com.example.spacex.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.app.Application
+import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.*
 import com.example.spacex.api.Api
 import com.example.spacex.repository.RocketListRepository
 import kotlinx.coroutines.launch
 import java.io.IOException
 
-class RocketListViewModel(private val repository: RocketListRepository) : ViewModel() {
-
+class RocketListViewModel @ViewModelInject constructor(
+    application: Application,
+    private val repository: RocketListRepository
+) : AndroidViewModel(application) {
     //  private var rocketListData = MutableLiveData<List<RocketsResponse>>()
 
     /**
@@ -55,7 +56,7 @@ class RocketListViewModel(private val repository: RocketListRepository) : ViewMo
      * Refresh data from the repository. Use a coroutine launch to run in a
      * background thread.
      */
-    private fun refreshDataFromRepository() {
+    fun refreshDataFromRepository() {
         viewModelScope.launch {
             try {
                 repository.fetchRocketList()

@@ -13,23 +13,27 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityMainBinding
+    private var _binding: ActivityMainBinding? = null
+    private val binding get() = _binding!!
     lateinit var viewModel: RocketListViewModel
     lateinit var rocketAdapter: RocketDetailAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        prepareRecyclerView()
+        viewModel = ViewModelProvider(this)[RocketListViewModel::class.java]
 
-        viewModel = ViewModelProvider(this@MainActivity)[RocketListViewModel::class.java]
-
-        /* viewModel.getRocketList()
-         viewModel.observeRocketListData().observe(this, Observer { movieList ->
-             rocketAdapter.setRocketList(movieList)
-         })*/
+        binding.rvRockets.apply {
+            hasFixedSize() // Improve performance (use only with fixed size items)
+            rocketAdapter = RocketDetailAdapter(mutableListOf())
+            binding.rvRockets.apply {
+                layoutManager = GridLayoutManager(applicationContext, 1)
+                adapter = rocketAdapter
+            }
+            adapter = rocketAdapter
+        }
 
         viewModel.rocketList.observe(this@MainActivity) {
             rocketAdapter.setData(it.toMutableList())
@@ -41,15 +45,19 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun prepareRecyclerView() {
-
-        rocketAdapter = RocketDetailAdapter(mutableListOf())
-        binding.rvRockets.apply {
-            layoutManager = GridLayoutManager(applicationContext, 1)
-            adapter = rocketAdapter
-            hasFixedSize() // Improve performance (use only with fixed size items)
-        }
+    override fun onStart() {
+        super.onStart()
+        loadData()
     }
 
+    private fun loadData() {
+        viewModel.refreshDataFromRepository()
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
 
 }

@@ -7,7 +7,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.spacex.model.database.RocketsEntity
 
-
 @Dao
 interface RocketsDao {
 

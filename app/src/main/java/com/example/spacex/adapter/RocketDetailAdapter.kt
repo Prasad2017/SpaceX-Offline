@@ -11,14 +11,10 @@ import com.example.spacex.model.Rockets
 import com.example.spacex.ui.RocketDetailActivity
 import com.squareup.picasso.Picasso
 
-class RocketDetailAdapter ( private var rocketList: MutableList<Rockets>) : RecyclerView.Adapter<RocketDetailAdapter.ViewHolder>() {
+class RocketDetailAdapter (
+    private var rocketList: MutableList<Rockets>
+) : RecyclerView.Adapter<RocketDetailAdapter.ViewHolder>() {
 
-   // private var rocketList = ArrayList<RocketsResponse>()
-
-     /*fun setRocketList(rocketList: List<RocketsResponse>) {
-         this.rocketList = rocketList as ArrayList<RocketsResponse>
-         notifyDataSetChanged()
-     }*/
 
     internal fun setData(data: MutableList<Rockets>?) {
         // Assign the list to the RecyclerView. If data is null, assign an empty list to the adapter.
@@ -26,7 +22,9 @@ class RocketDetailAdapter ( private var rocketList: MutableList<Rockets>) : Recy
         notifyDataSetChanged()
     }
 
-    class ViewHolder(val binding: RocketLayoutBinding) : RecyclerView.ViewHolder(binding.root) {}
+    class ViewHolder(val binding: RocketLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
+
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -53,7 +51,7 @@ class RocketDetailAdapter ( private var rocketList: MutableList<Rockets>) : Recy
         holder.binding.image.setOnClickListener(View.OnClickListener {
 
             val intent = Intent(holder.binding.image.context, RocketDetailActivity::class.java);
-            intent.putExtra("rocketId", rocketList[position].id)
+            intent.putExtra("rocketData", rocketList[position].id)
             holder.binding.image.context.startActivity(intent)
 
         })

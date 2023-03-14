@@ -5,9 +5,12 @@ import androidx.lifecycle.Transformations
 import com.example.spacex.api.ApiInterface
 import com.example.spacex.database.RocketsDao
 import com.example.spacex.model.Rockets
+import com.example.spacex.model.asDatabaseModel
 import com.example.spacex.model.database.asDomainModel
+import com.example.spacex.model.network.RocketsResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.Call
 import javax.inject.Inject
 
 
@@ -34,8 +37,8 @@ class RocketListRepository @Inject constructor(
      */
     suspend fun fetchRocketList() {
         withContext(Dispatchers.IO) {
-            val rockets = client.getRocketList()
-            //  rocketsDao.insertAll(rockets.asDatabaseModel())
+           val rockets = client.getRocketList()
+           rocketsDao.insertAll(rockets.asDatabaseModel())
         }
     }
 
